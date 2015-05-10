@@ -50,6 +50,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   	context "when is successfully updated" do 
   		before(:each) do 
   			@user = FactoryGirl.create :user 
+        request.headers['Authorization'] =  @user.auth_token
   			patch :update, { id: @user.id, 
   							user: { email: 'user@example.com' }}, format: :json
   		end 
@@ -67,6 +68,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   	context "when is not created" do
       before(:each) do
         @user = FactoryGirl.create :user
+        request.headers['Authorization'] =  @user.auth_token
         patch :update, { id: @user.id,
                          user: { email: "invalidemail.com" } }, format: :json
       end
@@ -85,6 +87,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
    describe "DELETE #destroy" do
   		before(:each) do
     		@user = FactoryGirl.create :user
+        api_authorization_header @user.auth_token
     		delete :destroy, { id: @user.id }, format: :json
   		end
 		it { should respond_with 204 }
